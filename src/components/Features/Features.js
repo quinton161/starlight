@@ -146,41 +146,56 @@ const ImageContainer = styled.div`
 `;
 
 const ImageStack = styled.div`
-  display: grid;
   position: relative;
-  grid-template-columns: repeat(12, 1fr);
-  gap: clamp(5px, 1vw, 10px);
+  width: 100%;
   height: 100%;
+  min-height: 500px;
+
+  @media (max-width: 992px) {
+    min-height: 400px;
+  }
+
+  @media (max-width: 640px) {
+    min-height: 300px;
+  }
 
   .stack-back {
-    grid-column: 4/-1;
-    grid-row: 1;
-    width: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 75%;
     height: 100%;
-    object-fit: cover;
+    z-index: 1;
 
-    @media (max-width: 768px) {
-      grid-column: 3/-1;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: clamp(4px, 1vw, 6px) solid #fff;
+      box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
     }
   }
 
   .stack-front {
-    grid-row: 1;
-    grid-column: 1/span 8;
-    margin-top: 20%;
-    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 65%;
     height: 100%;
-    object-fit: cover;
+    z-index: 2;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: clamp(4px, 1vw, 6px) solid #fff;
+      box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
+    }
 
     @media (max-width: 768px) {
-      grid-column: 1/span 9;
-      margin-top: 15%;
+      top: 15%;
+      width: 70%;
     }
-  }
-
-  img {
-    border: clamp(4px, 1vw, 6px) solid #fff;
-    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -190,8 +205,6 @@ const SingleImage = styled.div`
   height: 100%;
 
   img {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -220,8 +233,12 @@ const Features = () => {
           <Column size={7} data-aos="zoom-out" data-aos-delay="100">
             <ImageContainer className="features-img-bg">
               <ImageStack className="image-stack">
-                <img src="/assets/img/features-light-1.jpg" alt="" className="stack-front" />
-                <img src="/assets/img/features-light-2.jpg" alt="" className="stack-back" />
+                <div className="stack-back">
+                  <img src="/assets/img/features-light-2.jpg" alt="" />
+                </div>
+                <div className="stack-front">
+                  <img src="/assets/img/features-light-1.jpg" alt="" />
+                </div>
               </ImageStack>
             </ImageContainer>
           </Column>
@@ -251,4 +268,4 @@ const Features = () => {
   );
 };
 
-export default Features; 
+export default Features;
