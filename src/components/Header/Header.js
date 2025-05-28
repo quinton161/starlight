@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { BiChevronDown, BiMenu, BiX } from 'react-icons/bi';
+import { BiMenu, BiX } from 'react-icons/bi';
 
 const HeaderContainer = styled.header`
   color: var(--default-color);
@@ -290,8 +290,8 @@ const MobileNavToggle = styled.button`
 `;
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -302,55 +302,81 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isMenuOpen]);
+  const handleLinkClick = (e, targetId) => {
+    e.preventDefault();
+    setIsOpen(false);
 
-  const handleLinkClick = () => {
-    setIsMenuOpen(false);
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80; // Height of fixed header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
     <HeaderContainer isScrolled={isScrolled}>
       <Container>
-        <Logo to="/" isScrolled={isScrolled} onClick={handleLinkClick}>
+        <Logo to="/" isScrolled={isScrolled}>
           <img src="/assets/img/logo.png" alt="Starlight Memories" />
           <h1>Starlight Memories</h1>
         </Logo>
 
-        <NavMenu isOpen={isMenuOpen} isScrolled={isScrolled}>
+        <NavMenu isScrolled={isScrolled} isOpen={isOpen}>
           <ul>
-            <li><Link to="/" onClick={handleLinkClick} className="active">Home</Link></li>
-            <li><Link to="/about" onClick={handleLinkClick}>About</Link></li>
-            <li><Link to="/packages" onClick={handleLinkClick}>Packages</Link></li>
-            <li><Link to="/contact" onClick={handleLinkClick}>Contact</Link></li>
-            <li className="dropdown">
-              <Link to="#" onClick={(e) => e.preventDefault()}>
-                Account <BiChevronDown />
-              </Link>
-              <ul>
-                <li><Link to="/signup" onClick={handleLinkClick}>Sign Up</Link></li>
-                <li><Link to="/login" onClick={handleLinkClick}>Log In</Link></li>
-                <li><Link to="/forgot-password" onClick={handleLinkClick}>Forgot Password</Link></li>
-              </ul>
+            <li>
+              <a href="#hero" onClick={(e) => handleLinkClick(e, 'hero')}>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#about" onClick={(e) => handleLinkClick(e, 'about')}>
+                About
+              </a>
+            </li>
+            <li>
+              <a href="#features" onClick={(e) => handleLinkClick(e, 'features')}>
+                Features
+              </a>
+            </li>
+            <li>
+              <a href="#pricing" onClick={(e) => handleLinkClick(e, 'pricing')}>
+                Pricing
+              </a>
+            </li>
+            <li>
+              <a href="#faq" onClick={(e) => handleLinkClick(e, 'faq')}>
+                FAQ
+              </a>
+            </li>
+            <li>
+              <a href="#testimonials" onClick={(e) => handleLinkClick(e, 'testimonials')}>
+                Testimonials
+              </a>
+            </li>
+            <li>
+              <a href="#contact" onClick={(e) => handleLinkClick(e, 'contact')}>
+                Contact
+              </a>
             </li>
           </ul>
         </NavMenu>
 
-        <GetStartedButton to="/get-started" onClick={handleLinkClick}>
+        <GetStartedButton to="/get-started" className="btn-get-started">
           Get Started
         </GetStartedButton>
-        
+
         <MobileNavToggle 
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={() => setIsOpen(!isOpen)}
           isScrolled={isScrolled}
-          aria-label="Toggle navigation"
+          aria-label="Toggle mobile menu"
         >
-          {isMenuOpen ? <BiX /> : <BiMenu />}
+          {isOpen ? <BiX /> : <BiMenu />}
         </MobileNavToggle>
       </Container>
     </HeaderContainer>
